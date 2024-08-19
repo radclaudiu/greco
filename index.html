@@ -659,14 +659,22 @@
             body: tableData,
         });
     
-        // Cálculo del total de horas
-        
-        const totalHours = checks.reduce((total, check) => {
-            return total + (check.end - check.start) / 3600000;
-        }, 0);
+    // GPT  Obtener la posición Y donde termina la tabla
+    const finalY = doc.lastAutoTable.finalY || 75;
+
+    // Añadir el total de horas trabajadas debajo de la tabla
+    doc.text(`Total de horas trabajadas: ${totalHours.toFixed(2)}`, 20, finalY + 10);
+
+    // GPT  === Agregar texto adicional al final del PDF ===
+    // GPT  Aquí puedes personalizar el texto que deseas agregar al final del PDF
+    doc.setFontSize(12);  // Cambia el tamaño de la fuente si es necesario
+    doc.text('Este documento es un registro oficial de los fichajes del empleado.', 20, finalY + 20);
+    doc.text('Firmado electrónicamente por la empresa.', 20, finalY + 30);
     
-        const finalY = doc.lastAutoTable.finalY || 75;
-        doc.text(`Total de horas: `, 20, finalY + 10);
+    //GPT   Firma opcional: usa 'firmaenpdf' variable si la necesitas
+    doc.text(`Firma: ${firmaenpdf}`, 20, finalY + 40);
+
+        
         // Guardar el PDF
         doc.save(`Fichajes_${employee.name}_${checks[0].date.toISOString().split('T')[0]}_${checks[checks.length-1].date.toISOString().split('T')[0]}.pdf`);
     }
