@@ -662,10 +662,7 @@
     // GPT  Obtener la posición Y donde termina la tabla
     const finalY = doc.lastAutoTable.finalY || 75;
 
-    // Añadir el total de horas trabajadas debajo de la tabla
-    doc.text(`Total de horas trabajadas: ${totalHours.toFixed(2)}`, 20, finalY + 10);
-
-    // GPT  === Agregar texto adicional al final del PDF ===
+    // GPT  === Agrgar texto adicional al final del PDF ===
     // GPT  Aquí puedes personalizar el texto que deseas agregar al final del PDF
     doc.setFontSize(12);  // Cambia el tamaño de la fuente si es necesario
     doc.text('Este documento es un registro oficial de los fichajes del empleado.', 20, finalY + 20);
