@@ -648,8 +648,8 @@
         // Tabla de fichajes
         const tableData = checks.map(check => [
             check.date.toLocaleDateString(),
-            check.start.toLocaleTimeString(),
-            check.end.toLocaleTimeString(),
+            check.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // Solo hora y minutos
+            check.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),   // Solo hora y minutos
             ((check.end - check.start) / 3600000).toFixed(2)
         ]);
     
