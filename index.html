@@ -1,476 +1,675 @@
-<html><head><base href="https://webapps.example.com/"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>APP FICHAJES</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"><link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script><script src="https://cdn.jsdelivr.net/npm/flatpickr"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script><style>
+
+<html><head><base href="https://websim.ai/c/TVSllkdVIpSvofoDv%20quiero%20que%20mejores%20la%20interfaz%20de%20esta%20aplicacion%20que%20parezca%20muy%20profesional">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Empresas y Empleados</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
     body {
         font-family: 'Roboto', sans-serif;
         background-color: #f8f9fa;
     }
     .container {
         max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-    .btn-primary {
-        background-color: #4a90e2;
-        border-color: #4a90e2;
-    }
-    .btn-primary:hover {
-        background-color: #3a78c2;
-        border-color: #3a78c2;
+        margin-top: 30px;
     }
     .card {
-        margin-bottom: 20px;
+        border: none;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
+        margin-bottom: 20px;
     }
-    .card-header {
-        background-color: #4a90e2;
-        color: white;
-        border-radius: 8px 8px 0 0;
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
     }
-    .form-control:focus {
-        border-color: #4a90e2;
-        box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
     }
-    @media (max-width: 768px) {
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+    .modal-content {
+        border-radius: 0.5rem;
+    }
+    @media (max-width: 576px) {
         .container {
-            padding: 10px;
+            padding: 0 10px;
         }
     }
-</style></head><body>
+</style>
+</head>
+<body>
 <div class="container">
-    <h1 class="text-center mb-4">APP FICHAJES</h1>
-    <div class="row mb-3">
-        <div class="col-6">
-            <button id="addCompanyBtn" class="btn btn-primary w-100">Agregar Empresa</button>
-        </div>
-        <div class="col-6">
-            <button id="viewCompaniesBtn" class="btn btn-primary w-100">Ver Empresas</button>
-        </div>
+    <h1 class="text-center mb-4">Gestión de Empresas y Empleados</h1>
+    <div class="d-flex justify-content-center mb-4">
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addCompanyModal">Agregar Empresa</button>
+        <button class="btn btn-success" onclick="showCompanies()">Ver Empresas</button>
     </div>
-    <div id="companyForm" class="card d-none">
-        <div class="card-header">
-            <h5 class="card-title mb-0">Agregar Empresa</h5>
-        </div>
-        <div class="card-body">
-            <form id="addCompanyForm">
-                <div class="mb-3">
-                    <label for="companyName" class="form-label">Nombre de la Empresa</label>
-                    <input type="text" class="form-control" id="companyName" required>
-                </div>
-                <div class="mb-3">
-                    <label for="companyCIF" class="form-label">CIF</label>
-                    <input type="text" class="form-control" id="companyCIF" required>
-                </div>
-                <div class="mb-3">
-                    <label for="companyAddress" class="form-label">Dirección</label>
-                    <input type="text" class="form-control" id="companyAddress" required>
-                </div>
-                <div class="mb-3">
-                    <label for="companyPostalCode" class="form-label">Código Postal</label>
-                    <input type="text" class="form-control" id="companyPostalCode" required>
-                </div>
-                <div class="mb-3">
-                    <label for="companyCity" class="form-label">Ciudad</label>
-                    <input type="text" class="form-control" id="companyCity" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Guardar Empresa</button>
-            </form>
-        </div>
-    </div>
-    <div id="companiesList" class="d-none">
-        <h2 class="mb-3">Lista de Empresas</h2>
-        <div id="companiesContainer"></div>
-    </div>
-    <div id="employeeForm" class="card d-none">
-        <div class="card-header">
-            <h5 class="card-title mb-0">Agregar/Editar Empleado</h5>
-        </div>
-        <div class="card-body">
-            <form id="addEmployeeForm">
-                <div class="mb-3">
-                    <label for="employeeName" class="form-label">Nombre del Empleado</label>
-                    <input type="text" class="form-control" id="employeeName" required>
-                </div>
-                <div class="mb-3">
-                    <label for="employeeDNI" class="form-label">DNI</label>
-                    <input type="text" class="form-control" id="employeeDNI" required>
-                </div>
-                <div class="mb-3">
-                    <label for="employeeSocialSecurity" class="form-label">Número de Seguridad Social</label>
-                    <input type="text" class="form-control" id="employeeSocialSecurity" required>
-                </div>
-                <div id="scheduleInputs"></div>
-                <button type="submit" class="btn btn-primary">Guardar Empleado</button>
-            </form>
-        </div>
-    </div>
-    <div id="employeesList" class="d-none">
-        <h2 class="mb-3">Lista de Empleados</h2>
-        <div id="employeesContainer"></div>
-    </div>
-    <div id="vacationForm" class="card d-none">
-        <div class="card-header">
-            <h5 class="card-title mb-0">Agregar/Editar Vacaciones</h5>
-        </div>
-        <div class="card-body">
-            <form id="addVacationForm">
-                <div class="mb-3">
-                    <label for="vacationStart" class="form-label">Fecha de Inicio</label>
-                    <input type="text" class="form-control" id="vacationStart" required>
-                </div>
-                <div class="mb-3">
-                    <label for="vacationEnd" class="form-label">Fecha de Fin</label>
-                    <input type="text" class="form-control" id="vacationEnd" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Guardar Vacaciones</button>
-            </form>
-        </div>
-    </div>
-    <div id="generateTimecardsForm" class="card d-none">
-        <div class="card-header">
-            <h5 class="card-title mb-0">Generar Fichajes</h5>
-        </div>
-        <div class="card-body">
-            <form id="generateTimecardsForm">
-                <div class="mb-3">
-                    <label for="selectEmployee" class="form-label">Seleccionar Empleado</label>
-                    <select class="form-select" id="selectEmployee" required></select>
-                </div>
-                <div class="mb-3">
-                    <label for="timecardsStart" class="form-label">Fecha de Inicio</label>
-                    <input type="text" class="form-control" id="timecardsStart" required>
-                </div>
-                <div class="mb-3">
-                    <label for="timecardsEnd" class="form-label">Fecha de Fin</label>
-                    <input type="text" class="form-control" id="timecardsEnd" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Generar PDF</button>
-            </form>
+    <div id="companiesList" class="row"></div>
+</div>
+
+<!-- Modal para agregar empresa -->
+<div class="modal fade" id="addCompanyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar Empresa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addCompanyForm">
+                    <div class="mb-3">
+                        <label for="companyName" class="form-label">Nombre de la Empresa</label>
+                        <input type="text" class="form-control" id="companyName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="companyCif" class="form-label">CIF</label>
+                        <input type="text" class="form-control" id="companyCif" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="companyAddress" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="companyAddress" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="companyPostalCode" class="form-label">Código Postal</label>
+                        <input type="text" class="form-control" id="companyPostalCode" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="companyCity" class="form-label">Ciudad</label>
+                        <input type="text" class="form-control" id="companyCity" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="addCompany()">Guardar</button>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-let companies = [];
-let currentCompany = null;
-let currentEmployeeIndex = null;
+<!-- Modal para agregar empleado -->
+<div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar Empleado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addEmployeeForm">
+                    <input type="hidden" id="employeeCompanyId">
+                    <div class="mb-3">
+                        <label for="employeeName" class="form-label">Nombre del Empleado</label>
+                        <input type="text" class="form-control" id="employeeName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="employeeDni" class="form-label">DNI</label>
+                        <input type="text" class="form-control" id="employeeDni" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="employeeSsn" class="form-label">Número de Seguridad Social</label>
+                        <input type="text" class="form-control" id="employeeSsn" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Horarios</label>
+                        <div id="scheduleInputs">
+                            <!-- Los inputs de horario se generarán dinámicamente aquí -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="addEmployee()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-function saveData() {
+<!-- Modal para editar horario -->
+<div class="modal fade" id="editScheduleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Horario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editScheduleForm">
+                    <input type="hidden" id="editEmployeeId">
+                    <div id="editScheduleInputs">
+                        <!-- Los inputs de horario se generarán dinámicamente aquí -->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="saveEditedSchedule()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar vacaciones -->
+<div class="modal fade" id="addVacationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar Vacaciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addVacationForm">
+                    <input type="hidden" id="vacationEmployeeId">
+                    <div class="mb-3">
+                        <label for="vacationStart" class="form-label">Fecha de inicio</label>
+                        <input type="text" class="form-control" id="vacationStart" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vacationEnd" class="form-label">Fecha de fin</label>
+                        <input type="text" class="form-control" id="vacationEnd" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="addVacation()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para ver vacaciones -->
+<div class="modal fade" id="viewVacationsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Vacaciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul id="vacationsList" class="list-group">
+                    <!-- La lista de vacaciones se generará dinámicamente aquí -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para generar fichajes -->
+<div class="modal fade" id="generateChecksModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Generar Fichajes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="generateChecksForm">
+                    <input type="hidden" id="checksEmployeeId">
+                    <div class="mb-3">
+                        <label for="checksStart" class="form-label">Fecha de inicio</label>
+                        <input type="text" class="form-control" id="checksStart" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="checksEnd" class="form-label">Fecha de fin</label>
+                        <input type="text" class="form-control" id="checksEnd" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="generateChecks()">Generar PDF</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+let companies = JSON.parse(localStorage.getItem('companies')) || [];
+
+function saveCompanies() {
     localStorage.setItem('companies', JSON.stringify(companies));
 }
 
-function loadData() {
-    const storedCompanies = localStorage.getItem('companies');
-    if (storedCompanies) {
-        companies = JSON.parse(storedCompanies);
-    }
-}
+function addCompany() {
+    const name = document.getElementById('companyName').value;
+    const cif = document.getElementById('companyCif').value;
+    const address = document.getElementById('companyAddress').value;
+    const postalCode = document.getElementById('companyPostalCode').value;
+    const city = document.getElementById('companyCity').value;
 
-loadData();
-
-document.getElementById('addCompanyBtn').addEventListener('click', () => {
-    document.getElementById('companyForm').classList.remove('d-none');
-    document.getElementById('companiesList').classList.add('d-none');
-    document.getElementById('employeeForm').classList.add('d-none');
-    document.getElementById('employeesList').classList.add('d-none');
-    document.getElementById('vacationForm').classList.add('d-none');
-    document.getElementById('generateTimecardsForm').classList.add('d-none');
-});
-
-document.getElementById('viewCompaniesBtn').addEventListener('click', () => {
-    document.getElementById('companyForm').classList.add('d-none');
-    document.getElementById('companiesList').classList.remove('d-none');
-    document.getElementById('employeeForm').classList.add('d-none');
-    document.getElementById('employeesList').classList.add('d-none');
-    document.getElementById('vacationForm').classList.add('d-none');
-    document.getElementById('generateTimecardsForm').classList.add('d-none');
-    displayCompanies();
-});
-
-document.getElementById('addCompanyForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const company = {
-        name: document.getElementById('companyName').value,
-        cif: document.getElementById('companyCIF').value,
-        address: document.getElementById('companyAddress').value,
-        postalCode: document.getElementById('companyPostalCode').value,
-        city: document.getElementById('companyCity').value,
+    const newCompany = {
+        id: Date.now(),
+        name,
+        cif,
+        address,
+        postalCode,
+        city,
         employees: []
     };
-    companies.push(company);
-    saveData();
+
+    companies.push(newCompany);
+    saveCompanies();
+    showCompanies();
     document.getElementById('addCompanyForm').reset();
-    alert('Empresa agregada con éxito');
-});
-
-function displayCompanies() {
-    const container = document.getElementById('companiesContainer');
-    container.innerHTML = '';
-    companies.forEach((company, index) => {
-        const card = document.createElement('div');
-        card.className = 'card mb-3';
-        card.innerHTML = `
-            <div class="card-body">
-                <h5 class="card-title">${company.name}</h5>
-                <p class="card-text">CIF: ${company.cif}</p>
-                <p class="card-text">Dirección: ${company.address}, ${company.postalCode} ${company.city}</p>
-                <button class="btn btn-primary me-2" onclick="viewEmployees(${index})">Ver Empleados</button>
-                <button class="btn btn-danger" onclick="deleteCompany(${index})">Eliminar Empresa</button>
-            </div>
-        `;
-        container.appendChild(card);
-    });
+    bootstrap.Modal.getInstance(document.getElementById('addCompanyModal')).hide();
 }
 
-function deleteCompany(index) {
-    if (confirm('¿Estás seguro de que quieres eliminar esta empresa?')) {
-        companies.splice(index, 1);
-        saveData();
-        displayCompanies();
-    }
-}
+function showCompanies() {
+    const companiesList = document.getElementById('companiesList');
+    companiesList.innerHTML = '';
 
-function viewEmployees(companyIndex) {
-    currentCompany = companies[companyIndex];
-    document.getElementById('companiesList').classList.add('d-none');
-    document.getElementById('employeesList').classList.remove('d-none');
-    displayEmployees();
-}
-
-function displayEmployees() {
-    const container = document.getElementById('employeesContainer');
-    container.innerHTML = `
-        <button class="btn btn-primary mb-3" onclick="showAddEmployeeForm()">Agregar Empleado</button>
-        <button class="btn btn-primary mb-3 ms-2" onclick="showGenerateTimecardsForm()">Generar Fichajes</button>
-    `;
-    currentCompany.employees.forEach((employee, index) => {
-        const card = document.createElement('div');
-        card.className = 'card mb-3';
-        card.innerHTML = `
-            <div class="card-body">
-                <h5 class="card-title">${employee.name}</h5>
-                <p class="card-text">DNI: ${employee.dni}</p>
-                <p class="card-text">Número de Seguridad Social: ${employee.socialSecurity}</p>
-                <button class="btn btn-primary me-2" onclick="editEmployee(${index})">Editar Empleado</button>
-                <button class="btn btn-success me-2" onclick="showAddVacationForm(${index})">Agregar Vacaciones</button>
-                <button class="btn btn-info me-2" onclick="viewVacations(${index})">Ver Vacaciones</button>
-                <button class="btn btn-danger" onclick="deleteEmployee(${index})">Eliminar Empleado</button>
-            </div>
-        `;
-        container.appendChild(card);
-    });
-}
-
-function showAddEmployeeForm() {
-    currentEmployeeIndex = null;
-    document.getElementById('employeesList').classList.add('d-none');
-    document.getElementById('employeeForm').classList.remove('d-none');
-    document.getElementById('addEmployeeForm').reset();
-    generateScheduleInputs();
-}
-
-function generateScheduleInputs() {
-    const container = document.getElementById('scheduleInputs');
-    container.innerHTML = '';
-    const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-    days.forEach(day => {
-        container.innerHTML += `
-            <div class="mb-3">
-                <label class="form-label">${day}</label>
-                <div class="row">
-                    <div class="col">
-                        <input type="time" class="form-control" id="${day.toLowerCase()}Start">
-                    </div>
-                    <div class="col">
-                        <input type="time" class="form-control" id="${day.toLowerCase()}End">
-                    </div>
+    companies.forEach(company => {
+        const companyCard = document.createElement('div');
+        companyCard.className = 'col-md-6 mb-4';
+        companyCard.innerHTML = `
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">${company.name}</h5>
+                    <p class="card-text">CIF: ${company.cif}</p>
+                    <p class="card-text">Dirección: ${company.address}</p>
+                    <p class="card-text">CP: ${company.postalCode}</p>
+                    <p class="card-text">Ciudad: ${company.city}</p>
+                    <button class="btn btn-primary btn-sm me-2" onclick="showEmployees(${company.id})">Ver Empleados</button>
+                    <button class="btn btn-success btn-sm me-2" onclick="showAddEmployeeModal(${company.id})">Agregar Empleado</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteCompany(${company.id})">Eliminar Empresa</button>
                 </div>
             </div>
         `;
+        companiesList.appendChild(companyCard);
     });
 }
 
-document.getElementById('addEmployeeForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const employee = {
-        name: document.getElementById('employeeName').value,
-        dni: document.getElementById('employeeDNI').value,
-        socialSecurity: document.getElementById('employeeSocialSecurity').value,
-        schedule: {},
+function deleteCompany(companyId) {
+    if (confirm('¿Estás seguro de que quieres eliminar esta empresa?')) {
+        companies = companies.filter(company => company.id !== companyId);
+        saveCompanies();
+        showCompanies();
+    }
+}
+
+function showAddEmployeeModal(companyId) {
+    document.getElementById('employeeCompanyId').value = companyId;
+    generateScheduleInputs();
+    const modal = new bootstrap.Modal(document.getElementById('addEmployeeModal'));
+    modal.show();
+}
+
+function generateScheduleInputs() {
+    const scheduleInputs = document.getElementById('scheduleInputs');
+    scheduleInputs.innerHTML = '';
+    const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    
+    days.forEach(day => {
+        const dayInput = document.createElement('div');
+        dayInput.className = 'mb-2';
+        dayInput.innerHTML = `
+            <label class="form-label">${day}</label>
+            <div class="input-group">
+                <input type="text" class="form-control schedule-input" placeholder="Entrada" data-day="${day}" data-type="start">
+                <input type="text" class="form-control schedule-input" placeholder="Salida" data-day="${day}" data-type="end">
+            </div>
+        `;
+        scheduleInputs.appendChild(dayInput);
+    });
+
+    // Inicializar Flatpickr en los inputs de horario
+    flatpickr('.schedule-input', {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true
+    });
+}
+
+function addEmployee() {
+    const companyId = parseInt(document.getElementById('employeeCompanyId').value);
+    const name = document.getElementById('employeeName').value;
+    const dni = document.getElementById('employeeDni').value;
+    const ssn = document.getElementById('employeeSsn').value;
+
+    const schedule = {};
+    const scheduleInputs = document.querySelectorAll('.schedule-input');
+    scheduleInputs.forEach(input => {
+        const day = input.dataset.day;
+        const type = input.dataset.type;
+        if (!schedule[day]) schedule[day] = {};
+        schedule[day][type] = input.value;
+    });
+
+    const newEmployee = {
+        id: Date.now(),
+        name,
+        dni,
+        ssn,
+        schedule,
         vacations: []
     };
-    const days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
-    days.forEach(day => {
-        const startElement = document.getElementById(`${day}Start`);
-        const endElement = document.getElementById(`${day}End`);
-        if (startElement && endElement) {
-            const start = startElement.value;
-            const end = endElement.value;
-            if (start && end) {
-                employee.schedule[day] = { start, end };
-            }
-        }
-    });
-    if (currentEmployeeIndex !== null) {
-        currentCompany.employees[currentEmployeeIndex] = employee;
-    } else {
-        currentCompany.employees.push(employee);
-    }
-    saveData();
-    document.getElementById('addEmployeeForm').reset();
-    alert('Empleado guardado con éxito');
-    document.getElementById('employeeForm').classList.add('d-none');
-    document.getElementById('employeesList').classList.remove('d-none');
-    displayEmployees();
-});
 
-function deleteEmployee(index) {
+    const companyIndex = companies.findIndex(company => company.id === companyId);
+    if (companyIndex !== -1) {
+        companies[companyIndex].employees.push(newEmployee);
+        saveCompanies();
+        showEmployees(companyId);
+        document.getElementById('addEmployeeForm').reset();
+        bootstrap.Modal.getInstance(document.getElementById('addEmployeeModal')).hide();
+    }
+}
+
+function showEmployees(companyId) {
+    const company = companies.find(company => company.id === companyId);
+    if (!company) return;
+
+    const companiesList = document.getElementById('companiesList');
+    companiesList.innerHTML = `
+        <div class="col-12 mb-4">
+            <h2>${company.name} - Empleados</h2>
+            <button class="btn btn-primary mb-3" onclick="showCompanies()">Volver a Empresas</button>
+        </div>
+    `;
+
+    company.employees.forEach(employee => {
+        const employeeCard = document.createElement('div');
+        employeeCard.className = 'col-md-6 mb-4';
+        employeeCard.innerHTML = `
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">${employee.name}</h5>
+                    <p class="card-text">DNI: ${employee.dni}</p>
+                    <p class="card-text">NSS: ${employee.ssn}</p>
+                    <button class="btn btn-primary btn-sm me-2" onclick="showEditScheduleModal(${companyId}, ${employee.id})">Editar Horario</button>
+                    <button class="btn btn-success btn-sm me-2" onclick="showAddVacationModal(${companyId}, ${employee.id})">Agregar Vacaciones</button>
+                    <button class="btn btn-info btn-sm me-2" onclick="showViewVacationsModal(${companyId}, ${employee.id})">Ver Vacaciones</button>
+                    <button class="btn btn-warning btn-sm me-2" onclick="showGenerateChecksModal(${companyId}, ${employee.id})">Generar Fichajes</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteEmployee(${companyId}, ${employee.id})">Eliminar Empleado</button>
+                </div>
+            </div>
+        `;
+        companiesList.appendChild(employeeCard);
+    });
+}
+
+function deleteEmployee(companyId, employeeId) {
     if (confirm('¿Estás seguro de que quieres eliminar este empleado?')) {
-        currentCompany.employees.splice(index, 1);
-        saveData();
-        displayEmployees();
+        const companyIndex = companies.findIndex(company => company.id === companyId);
+        if (companyIndex !== -1) {
+            companies[companyIndex].employees = companies[companyIndex].employees.filter(employee => employee.id !== employeeId);
+            saveCompanies();
+            showEmployees(companyId);
+        }
     }
 }
 
-function editEmployee(index) {
-    currentEmployeeIndex = index;
-    const employee = currentCompany.employees[index];
-    document.getElementById('employeesList').classList.add('d-none');
-    document.getElementById('employeeForm').classList.remove('d-none');
-    document.getElementById('employeeName').value = employee.name;
-    document.getElementById('employeeDNI').value = employee.dni;
-    document.getElementById('employeeSocialSecurity').value = employee.socialSecurity;
-    generateScheduleInputs();
-    const days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+function showEditScheduleModal(companyId, employeeId) {
+    const company = companies.find(company => company.id === companyId);
+    const employee = company.employees.find(employee => employee.id === employeeId);
+    
+    document.getElementById('editEmployeeId').value = employeeId;
+    
+    const editScheduleInputs = document.getElementById('editScheduleInputs');
+    editScheduleInputs.innerHTML = '';
+    
+    const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    
     days.forEach(day => {
-        if (employee.schedule[day]) {
-            const startElement = document.getElementById(`${day}Start`);
-            const endElement = document.getElementById(`${day}End`);
-            if (startElement && endElement) {
-                startElement.value = employee.schedule[day].start;
-                endElement.value = employee.schedule[day].end;
+        const dayInput = document.createElement('div');
+        dayInput.className = 'mb-2';
+        dayInput.innerHTML = `
+            <label class="form-label">${day}</label>
+            <div class="input-group">
+                <input type="text" class="form-control edit-schedule-input" placeholder="Entrada" data-day="${day}" data-type="start" value="${employee.schedule[day]?.start || ''}">
+                <input type="text" class="form-control edit-schedule-input" placeholder="Salida" data-day="${day}" data-type="end" value="${employee.schedule[day]?.end || ''}">
+            </div>
+        `;
+        editScheduleInputs.appendChild(dayInput);
+    });
+
+    // Inicializar Flatpickr en los inputs de horario
+    flatpickr('.edit-schedule-input', {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true
+    });
+
+    const modal = new bootstrap.Modal(document.getElementById('editScheduleModal'));
+    modal.show();
+}
+
+function saveEditedSchedule() {
+    const employeeId = parseInt(document.getElementById('editEmployeeId').value);
+    const schedule = {};
+    const scheduleInputs = document.querySelectorAll('.edit-schedule-input');
+    scheduleInputs.forEach(input => {
+        const day = input.dataset.day;
+        const type = input.dataset.type;
+        if (!schedule[day]) schedule[day] = {};
+        schedule[day][type] = input.value;
+    });
+
+    for (let company of companies) {
+        const employeeIndex = company.employees.findIndex(employee => employee.id === employeeId);
+        if (employeeIndex !== -1) {
+            company.employees[employeeIndex].schedule = schedule;
+            saveCompanies();
+            showEmployees(company.id);
+            bootstrap.Modal.getInstance(document.getElementById('editScheduleModal')).hide();
+            break;
+        }
+    }
+}
+
+function showAddVacationModal(companyId, employeeId) {
+    document.getElementById('vacationEmployeeId').value = employeeId;
+    
+    flatpickr('#vacationStart', {
+        dateFormat: "Y-m-d",
+    });
+    
+    flatpickr('#vacationEnd', {
+        dateFormat: "Y-m-d",
+    });
+
+    const modal = new bootstrap.Modal(document.getElementById('addVacationModal'));
+    modal.show();
+}
+
+function addVacation() {
+    const employeeId = parseInt(document.getElementById('vacationEmployeeId').value);
+    const start = document.getElementById('vacationStart').value;
+    const end = document.getElementById('vacationEnd').value;
+
+    const vacation = { id: Date.now(), start, end };
+
+    for (let company of companies) {
+        const employeeIndex = company.employees.findIndex(employee => employee.id === employeeId);
+        if (employeeIndex !== -1) {
+            if (!company.employees[employeeIndex].vacations) {
+                company.employees[employeeIndex].vacations = [];
+            }
+            company.employees[employeeIndex].vacations.push(vacation);
+            saveCompanies();
+            showEmployees(company.id);
+            document.getElementById('addVacationForm').reset();
+            bootstrap.Modal.getInstance(document.getElementById('addVacationModal')).hide();
+            break;
+        }
+    }
+}
+
+function showViewVacationsModal(companyId, employeeId) {
+    const company = companies.find(company => company.id === companyId);
+    const employee = company.employees.find(employee => employee.id === employeeId);
+    
+    const vacationsList = document.getElementById('vacationsList');
+    vacationsList.innerHTML = '';
+    
+    if (employee.vacations && employee.vacations.length > 0) {
+        employee.vacations.forEach(vacation => {
+            const vacationItem = document.createElement('li');
+            vacationItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+            vacationItem.innerHTML = `
+                ${vacation.start} - ${vacation.end}
+                <div>
+                    <button class="btn btn-sm btn-warning me-2" onclick="editVacation(${companyId}, ${employeeId}, ${vacation.id})">Editar</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteVacation(${companyId}, ${employeeId}, ${vacation.id})">Eliminar</button>
+                </div>
+            `;
+            vacationsList.appendChild(vacationItem);
+        });
+    } else {
+        vacationsList.innerHTML = '<li class="list-group-item">No hay vacaciones registradas</li>';
+    }
+
+    const modal = new bootstrap.Modal(document.getElementById('viewVacationsModal'));
+    modal.show();
+}
+
+function editVacation(companyId, employeeId, vacationId) {
+    // Implementar la lógica para editar vacaciones
+    console.log(`Editar vacación: Company ${companyId}, Employee ${employeeId}, Vacation ${vacationId}`);
+}
+
+function deleteVacation(companyId, employeeId, vacationId) {
+    if (confirm('¿Estás seguro de que quieres eliminar estas vacaciones?')) {
+        const companyIndex = companies.findIndex(company => company.id === companyId);
+        if (companyIndex !== -1) {
+            const employeeIndex = companies[companyIndex].employees.findIndex(employee => employee.id === employeeId);
+            if (employeeIndex !== -1) {
+                companies[companyIndex].employees[employeeIndex].vacations = companies[companyIndex].employees[employeeIndex].vacations.filter(vacation => vacation.id !== vacationId);
+                saveCompanies();
+                showViewVacationsModal(companyId, employeeId);
             }
         }
-    });
-}
-
-function showAddVacationForm(employeeIndex) {
-    document.getElementById('employeesList').classList.add('d-none');
-    document.getElementById('vacationForm').classList.remove('d-none');
-    flatpickr("#vacationStart", {
-        dateFormat: "Y-m-d"
-    });
-    flatpickr("#vacationEnd", {
-        dateFormat: "Y-m-d"
-    });
-    document.getElementById('addVacationForm').onsubmit = (e) => {
-        e.preventDefault();
-        const vacation = {
-            start: document.getElementById('vacationStart').value,
-            end: document.getElementById('vacationEnd').value
-        };
-        currentCompany.employees[employeeIndex].vacations.push(vacation);
-        saveData();
-        alert('Vacaciones agregadas con éxito');
-        document.getElementById('addVacationForm').reset();
-        document.getElementById('vacationForm').classList.add('d-none');
-        document.getElementById('employeesList').classList.remove('d-none');
-        displayEmployees();
-    };
-}
-
-function viewVacations(employeeIndex) {
-    const employee = currentCompany.employees[employeeIndex];
-    let vacationsList = 'Vacaciones:';
-    if (employee.vacations.length === 0) {
-        vacationsList += '\nNo hay vacaciones registradas.';
-    } else {
-        employee.vacations.forEach((vacation, index) => {
-            vacationsList += `\n${index + 1}. Desde ${vacation.start} hasta ${vacation.end}`;
-        });
     }
-    alert(vacationsList);
 }
 
-function showGenerateTimecardsForm() {
-    document.getElementById('employeesList').classList.add('d-none');
-    document.getElementById('generateTimecardsForm').classList.remove('d-none');
-    const selectEmployee = document.getElementById('selectEmployee');
-    selectEmployee.innerHTML = '';
-    currentCompany.employees.forEach((employee, index) => {
-        const option = document.createElement('option');
-        option.value = index;
-        option.textContent = employee.name;
-        selectEmployee.appendChild(option);
+function showGenerateChecksModal(companyId, employeeId) {
+    document.getElementById('checksEmployeeId').value = employeeId;
+    
+    flatpickr('#checksStart', {
+        dateFormat: "Y-m-d",
     });
-    flatpickr("#timecardsStart", {
-        dateFormat: "Y-m-d"
+    
+    flatpickr('#checksEnd', {
+        dateFormat: "Y-m-d",
     });
-    flatpickr("#timecardsEnd", {
-        dateFormat: "Y-m-d"
-    });
+
+    const modal = new bootstrap.Modal(document.getElementById('generateChecksModal'));
+    modal.show();
 }
 
-document.getElementById('generateTimecardsForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const employeeIndex = document.getElementById('selectEmployee').value;
-    const startDate = new Date(document.getElementById('timecardsStart').value);
-    const endDate = new Date(document.getElementById('timecardsEnd').value);
-    const employee = currentCompany.employees[employeeIndex];
-    const timecards = generateTimecards(employee, startDate, endDate);
-    generatePDF(employee, timecards);
-});
+function generateChecks() {
+    const employeeId = parseInt(document.getElementById('checksEmployeeId').value);
+    const start = new Date(document.getElementById('checksStart').value);
+    const end = new Date(document.getElementById('checksEnd').value);
 
-function generateTimecards(employee, startDate, endDate) {
-    const timecards = [];
-    const currentDate = new Date(startDate);
-    while (currentDate <= endDate) {
-        const dayOfWeek = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'][currentDate.getDay()];
-        const schedule = employee.schedule[dayOfWeek];
-        if (schedule) {
-            const [startHour, startMinute] = schedule.start.split(':');
-            const [endHour, endMinute] = schedule.end.split(':');
-            const checkIn = new Date(currentDate);
-            checkIn.setHours(parseInt(startHour), parseInt(startMinute) - Math.floor(Math.random() * 5) - 1, Math.floor(Math.random() * 60));
-            const checkOut = new Date(currentDate);
-            checkOut.setHours(parseInt(endHour), parseInt(endMinute) + Math.floor(Math.random() * 4) + 1, Math.floor(Math.random() * 60));
-            timecards.push({
-                date: currentDate.toISOString().split('T')[0],
-                checkIn: checkIn.toTimeString().slice(0, 8),
-                checkOut: checkOut.toTimeString().slice(0, 8)
-            });
+    let company, employee;
+    for (let c of companies) {
+        employee = c.employees.find(e => e.id === employeeId);
+        if (employee) {
+            company = c;
+            break;
         }
-        currentDate.setDate(currentDate.getDate() + 1);
     }
-    return timecards;
+
+    if (!company || !employee) return;
+
+    const checks = [];
+    for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
+        const dayOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][date.getDay()];
+        const schedule = employee.schedule[dayOfWeek];
+
+        if (schedule && schedule.start && schedule.end) {
+            const isVacation = employee.vacations && employee.vacations.some(v => {
+                const vacationStart = new Date(v.start);
+                const vacationEnd = new Date(v.end);
+                return date >= vacationStart && date <= vacationEnd;
+            });
+
+            if (!isVacation) {
+                const randomStart = new Date(date);
+                const [startHour, startMinute] = schedule.start.split(':');
+                randomStart.setHours(parseInt(startHour), parseInt(startMinute) - Math.floor(Math.random() * 5) - 1);
+
+                const randomEnd = new Date(date);
+                const [endHour, endMinute] = schedule.end.split(':');
+                randomEnd.setHours(parseInt(endHour), parseInt(endMinute) + Math.floor(Math.random() * 4) + 1);
+
+                checks.push({
+                    date: new Date(date),
+                    start: randomStart,
+                    end: randomEnd
+                });
+            }
+        }
+    }
+
+    generatePDF(company, employee, checks);
+    bootstrap.Modal.getInstance(document.getElementById('generateChecksModal')).hide();
 }
 
-function generatePDF(employee, timecards) {
+function generatePDF(company, employee, checks) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    
-    // Agregar datos de la empresa y del empleado
-    doc.setFontSize(18);
-    doc.text(currentCompany.name, 20, 20);
-    doc.setFontSize(12);
-    doc.text(`CIF: ${currentCompany.cif}`, 20, 30);
-    doc.text(`Dirección: ${currentCompany.address}, ${currentCompany.postalCode} ${currentCompany.city}`, 20, 40);
-    doc.text(`Empleado: ${employee.name}`, 20, 50);
-    doc.text(`DNI: ${employee.dni}`, 20, 60);
-    doc.text(`Número de Seguridad Social: ${employee.socialSecurity}`, 20, 70);
 
-    // Crear tabla de fichajes
-    const tableData = timecards.map(timecard => [timecard.date, timecard.checkIn, timecard.checkOut]);
+    // Título
+    doc.setFontSize(18);
+    doc.text('Registro de Fichajes', 105, 15, null, null, 'center');
+
+    // Datos de la empresa
+    doc.setFontSize(12);
+    doc.text(`Empresa: ${company.name}`, 20, 30);
+    doc.text(`CIF: ${company.cif}`, 20, 35);
+    doc.text(`Dirección: ${company.address}`, 20, 40);
+    doc.text(`CP: ${company.postalCode}, Ciudad: ${company.city}`, 20, 45);
+
+    // Datos del empleado
+    doc.text(`Empleado: ${employee.name}`, 20, 55);
+    doc.text(`DNI: ${employee.dni}`, 20, 60);
+    doc.text(`NSS: ${employee.ssn}`, 20, 65);
+
+    // Tabla de fichajes
+    const tableData = checks.map(check => [
+        check.date.toLocaleDateString(),
+        check.start.toLocaleTimeString(),
+        check.end.toLocaleTimeString(),
+        ((check.end - check.start) / 3600000).toFixed(2)
+    ]);
+
     doc.autoTable({
-        startY: 80,
-        head: [['Fecha', 'Hora de Entrada', 'Hora de Salida']],
+        startY: 75,
+        head: [['Fecha', 'Entrada', 'Salida', 'Horas']],
         body: tableData,
     });
 
+    // Cálculo del total de horas
+    const totalHours = checks.reduce((total, check) => {
+        return total + (check.end - check.start) / 3600000;
+    }, 0);
+
+    const finalY = doc.lastAutoTable.finalY || 75;
+    doc.text(`Total de horas: ${totalHours.toFixed(2)}`, 20, finalY + 10);
+
     // Guardar el PDF
-    doc.save('fichajes.pdf');
+    doc.save(`Fichajes_${employee.name}_${checks[0].date.toISOString().split('T')[0]}_${checks[checks.length-1].date.toISOString().split('T')[0]}.pdf`);
 }
 
-// Inicialización de la aplicación
-displayCompanies();
+// Inicializar la aplicación
+showCompanies();
 </script>
-</body></html>
+</body>
+</html>
